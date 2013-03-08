@@ -5,17 +5,8 @@ import sys
 from thread import * 
 
 HOST = ''
-PORT = 5555
-def clientthread(conn):
-    #Vastataan yhteyteen
-    conn.sendall('Saatana mie tahtosin nukkua! Mutta leikkik‰‰!')
-    while True:
-        print 'Connected with host on ' + addr[0] + ':' + str(addr[1])
-        reply = conn.recv(1024)
-        print reply
-        if not reply:
-            break
-    conn.close()
+PORT = 5557
+
     
 #Create socket s
 try:
@@ -23,18 +14,29 @@ try:
 except socket.error, msg:
     print 'Failed to create socket. Error message: ' + str(msg[1])
     sys.exit()
-
+print 'Socket created'
 #Bind socket s to an abritary host and port    
 try:
     s.bind((HOST, PORT))
 except socket.error, msg:
-    print 'Bind failer, error message: ' + msg[1]
+    print 'Bind failed, error message: ' + msg[1]
     sys.exit()
 print 'Bind successfull'
-
+    
 #Set socket to listen for connections
 s.listen(10)
 print 'Socket now listening'
+
+def clientthread(conn):
+    #Vastataan yhteyteen
+    conn.sendall('T‰‰ kertoo juttuja!')
+    while True:
+        reply = conn.recv(1024)
+        print reply
+        if not reply:
+            break
+        conn.sendall('Ok... ' + reply)
+    conn.close()
 
 conn, addr = s.accept() #Accept incoming connection
 while True:
